@@ -1,5 +1,8 @@
 package com.payments.entities;
 
+import com.payments.exceptions.InsufficientFundsException;
+import com.payments.exceptions.InvalidPaymentException;
+
 public class BankTransferPayment  extends Payment {
     private double balance;
 
@@ -28,13 +31,13 @@ public class BankTransferPayment  extends Payment {
     }
 
     @Override
-    public PaymentStatus processPayment() {
+    public PaymentStatus processPayment() throws InsufficientFundsException, InvalidPaymentException {
         if(balance >= getMonto()) {
             setStatus(PaymentStatus.APPROVED);
             System.out.println("Pago aprovado ");
         } else {
             setStatus(PaymentStatus.REJECTED);
-            System.out.println("Pago rechazado ");
+           throw new InsufficientFundsException("Pago rechazado");
         }
         return getStatus();
     }
