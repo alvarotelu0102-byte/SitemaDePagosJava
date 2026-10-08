@@ -1,5 +1,7 @@
 package com.payments.entities;
 
+import com.payments.exceptions.InsufficientFundsException;
+import com.payments.exceptions.InvalidPaymentException;
 import com.payments.interfaces.Refundable;
 
 import java.io.IOException;
@@ -37,13 +39,13 @@ public class PayPalPayment  extends Payment implements Refundable {
     }
 
     @Override
-    public PaymentStatus processPayment() {
+    public PaymentStatus processPayment() throws InsufficientFundsException, InvalidPaymentException {
         if(paypalBalance >= getMonto()){
             setStatus(PaymentStatus.APPROVED);
             System.out.println("Pago aprovado ");
         } else {
             setStatus(PaymentStatus.REJECTED);
-            System.out.println("Pago rechazado ");
+            throw new InsufficientFundsException("Pago rechazado ");
         }
         return getStatus();
     }
