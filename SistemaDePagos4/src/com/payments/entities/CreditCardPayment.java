@@ -25,8 +25,7 @@ public class CreditCardPayment extends Payment implements Refundable {
         return CardNumber;
     }
 
-    public void setCardNumber(String cardNumber) {
-        CardNumber = cardNumber;
+    public void setCardNumber(String cardNumber) {this.CardNumber = cardNumber;
     }
 
     public String getHolderNumber() {
@@ -34,7 +33,7 @@ public class CreditCardPayment extends Payment implements Refundable {
     }
 
     public void setHolderNumber(String holderNumber) {
-        HolderNumber = holderNumber;
+        this.HolderNumber = holderNumber;
     }
 
     public double getCreditLimit() {
@@ -42,28 +41,81 @@ public class CreditCardPayment extends Payment implements Refundable {
     }
 
     public void setCreditLimit(double creditLimit) {
-        CreditLimit = creditLimit;
+        this.CreditLimit = creditLimit;
     }
 
+    // Mostrar informacion
     @Override
     public String toString() {
         return "CreditCardPayment{" +
-                "CardNumber='" + CardNumber + '\'' +
+                "CardNumber='****" +
+                (CardNumber != null && CardNumber.length() >= 4
+                        ? CardNumber.substring(CardNumber.length() - 4)
+                        : "****") + '\'' +
                 ", HolderNumber='" + HolderNumber + '\'' +
                 ", CreditLimit=" + CreditLimit +
                 "} " + super.toString();
     }
 
+    //Procesar pago
     @Override
-    public PaymentStatus processPayment()throws InsufficientFundsException, InvalidPaymentException {
-        if (getMonto()>=getCreditLimit()){
-            setStatus(PaymentStatus.REJECTED);
-            throw new InsufficientFundsException("Fundos insuficientes ");
-        } else {setStatus(PaymentStatus.APPROVED);
-            System.out.println("Credito aprovado ");
+    public PaymentStatus processPayment()
+            throws InsufficientFundsException, InvalidPaymentException {
 
-
+        // 1. Validar que el pago este pendiente
+        if (getStatus() != PaymentStatus.REJECTED) {
+            throw new InvalidPaymentException("El pago ya fue procesado");
         }
+
+        // Validar el monto
+        if (!Double.isFinite(getMonto()) || getMonto() <= 0) {
+
+            setStatus(PaymentStatus.REJECTED);
+
+            throw new InvalidPaymentException(
+                    "El monto debe ser mayor a cero"
+            );
+        }
+
+        // 3. Validar datos de la tarjeta
+        if (CardNumber == null || CardNumber.isBlank()
+                || HolderNumber == null || HolderNumber.isBlank()) {
+
+            setStatus(PaymentStatus.REJECTED);
+
+            throw new InvalidPaymentException(
+                    "Datos de tarjeta incompletos"
+            );
+        }
+
+        // 4. Validar limite de credito
+        if (!Double.isFinite(CreditLimit) || CreditLimit < 0) {
+
+            setStatus(PaymentStatus.REJECTED);
+
+            throw new InvalidPaymentException(
+                    "Limite de credito invalido"
+            );
+        }
+
+        // 5. Aprobar o rechazar el pago
+        if (getMonto() <= CreditLimit) {
+
+            CreditLimit -= getMonto();
+
+            setStatus(PaymentStatus.APPROVED);
+
+            System.out.println("Credito aprobado");
+
+        } else {
+
+            setStatus(PaymentStatus.REJECTED);
+
+            throw new InsufficientFundsException(
+                    "Limite de credito insuficiente"
+            );
+        }
+
         return getStatus();
     }
 
@@ -75,6 +127,7 @@ public class CreditCardPayment extends Payment implements Refundable {
             setStatus(PaymentStatus.REJECTED);
             System.out.println("Reembolso Realizado");
         } else{
+
             System.out.println("El reembolso no fue aprobado");
         }
 

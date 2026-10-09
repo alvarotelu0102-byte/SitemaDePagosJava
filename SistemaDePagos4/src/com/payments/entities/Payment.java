@@ -5,10 +5,13 @@ import java.net.IDN;
 //Creamos superclase abstracta
 public abstract class Payment {
     //Creamos atributos de clase
+    private static int siguienteID = 1;
+
     private int ID;
     private double Monto;
     private PaymentStatus status;
 
+    //Constructor con ID manual
     public Payment(int ID, double monto, PaymentStatus status) {
         this.ID = ID;
         Monto = monto;
@@ -39,6 +42,7 @@ public abstract class Payment {
         this.status = status;
     }
 
+    //Mostrar informacion del pago
     @Override
     public String toString() {
         return "Payment{" +
@@ -48,12 +52,14 @@ public abstract class Payment {
                 '}';
     }
 
+    //Constructor con ID automatico
     protected Payment(double monto) {
-        this.ID = ID;
+        this.ID = siguienteID++;
         this.Monto = monto;
         this.status = PaymentStatus.PENDING;
     } //Metodo que devuelve el ID, MONTO, ESTADO DE PAGO
 
+    //Metodo abstracto
     public abstract PaymentStatus processPayment();
 
 
