@@ -17,12 +17,10 @@ public class PaymentManager {
 
         if (payment == null) {
             System.out.println("No se puede registrar un pago nulo");
-            return;
         }
 
         if (findById(payment.getID()) != null) {
             System.out.println("Error: el ID ya esta registrado");
-            return;
         }
 
         payments.add(payment);
