@@ -4,6 +4,7 @@ package com.payments.entities;
 import com.payments.exceptions.InsufficientFundsException;
 import com.payments.exceptions.InvalidPaymentException;
 import com.payments.interfaces.Refundable;
+
 //SE CREA CLASE QUE HEREDA DE PAYMENT
 public class CreditCardPayment extends Payment implements Refundable {
 
@@ -94,7 +95,7 @@ public class CreditCardPayment extends Payment implements Refundable {
             setStatus(PaymentStatus.REJECTED);
 
             throw new InvalidPaymentException(
-                    "Limite de credito invalido"
+                    "Limite de crédito invalido"
             );
         }
 
@@ -105,14 +106,14 @@ public class CreditCardPayment extends Payment implements Refundable {
 
             setStatus(PaymentStatus.APPROVED);
 
-            System.out.println("Credito aprobado");
+            System.out.println("Crédito aprobado");
 
         } else {
 
             setStatus(PaymentStatus.REJECTED);
 
             throw new InsufficientFundsException(
-                    "Limite de credito insuficiente"
+                    "Limite de crédito insuficiente"
             );
         }
 
@@ -124,7 +125,7 @@ public class CreditCardPayment extends Payment implements Refundable {
 
         if (getStatus()== PaymentStatus.APPROVED){
             CreditLimit += getMonto();
-            setStatus(PaymentStatus.REJECTED);
+            setStatus(PaymentStatus.REFUNDED);
             System.out.println("Reembolso Realizado");
         } else{
 

@@ -4,8 +4,6 @@ import com.payments.exceptions.InsufficientFundsException;
 import com.payments.exceptions.InvalidPaymentException;
 import com.payments.interfaces.Refundable;
 
-import java.io.IOException;
-import java.nio.CharBuffer;
 
 public class PayPalPayment  extends Payment implements Refundable {
     private final String email;
@@ -54,7 +52,7 @@ public class PayPalPayment  extends Payment implements Refundable {
     public void refund() {
         if (getStatus()== PaymentStatus.APPROVED){
            paypalBalance += getMonto();
-            setStatus(PaymentStatus.REJECTED);
+            setStatus(PaymentStatus.REFUNDED);
             System.out.println("Reembolso Realizado");
         } else{
             System.out.println("El reembolso no fue aprobado");

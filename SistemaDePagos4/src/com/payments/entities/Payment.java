@@ -1,7 +1,5 @@
 package com.payments.entities;
 
-import java.net.IDN;
-
 //Creamos superclase abstracta
 public abstract class Payment {
     //Creamos atributos de clase

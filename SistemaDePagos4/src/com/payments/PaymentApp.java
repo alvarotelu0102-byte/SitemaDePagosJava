@@ -110,9 +110,9 @@ public class PaymentApp {
 
         reembolsable.refund();
 
-        System.out.println("Estado despues del reembolso: " + paypal.getStatus());
+        System.out.println("Estado después del reembolso: " + paypal.getStatus());
 
-        System.out.println("Total aprobado despues del reembolso: $" + manager.getTotal());
+        System.out.println("Total aprobado después del reembolso: $" + manager.getTotal());
 
 
 
@@ -141,7 +141,7 @@ public class PaymentApp {
 
         if (noEncontrado == null) {
 
-            System.out.println("No existe ningun pago con ID 999");
+            System.out.println("No existe ningún pago con ID 999");
 
         } else {
 
@@ -160,6 +160,15 @@ public class PaymentApp {
         System.out.println("Monto total aprobado: $" + manager.getTotal());
 
         System.out.println("\nFin de las pruebas");
+
+
+         int contador = manager.getTotalRegisteredPayments();
+        System.out.println("\n--- PAGOS REGISTRADOS ---");
+         System.out.println(contador);
+
+         int contador2 = manager.getTotalProcessedPayments();
+        System.out.println("\n--- PAGOS PROCESADOS ---");
+         System.out.println(contador2);
 
     } // main
 
